@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "heroku-prebuild": "npm install --prefix api"
+    "heroku-prebuild": "npm install --prefix api",
+    "heroku-rebuild": "npm install --prefix api"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +22,7 @@
     "graphql-scalars": "^1.24.0",
     "md5": "^2.3.0",
     "mongoose": "^8.9.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "jsonwebtoken": "^9.0.0"
   }
 }
