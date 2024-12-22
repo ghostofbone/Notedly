@@ -15,13 +15,13 @@
     "jsonwebtoken": "^9.0.2"
   },
   "dependencies": {
+    "@apollo/server": "^4.11.2",
     "apollo-server-express": "^3.13.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "graphql": "^16.9.0",
-    "graphql-depth-limit": "^1.1.0",
     "graphql-scalars": "^1.24.0",
     "graphql-validation-complexity": "^0.4.2",
     "helmet": "^8.0.0",
