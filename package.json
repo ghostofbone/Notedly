@@ -9,11 +9,13 @@
   "private": true,
   "devDependencies": {
     "express": "^4.21.2",
+    "gh-pages": "^6.2.0",
     "graphql-depth-limit": "^1.1.0",
     "graphql-validation-complexity": "^0.4.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2"
   },
+  "homepage": "https://ghostofbone.github.io/Notedly",
   "dependencies": {
     "@apollo/server": "^4.11.2",
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
