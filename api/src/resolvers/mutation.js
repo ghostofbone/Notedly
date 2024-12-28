@@ -12,15 +12,24 @@ const gravatar = require('../util/gravatar');
 const {user} = require("../resolvers/query");
 
 module.exports = {
-    newNote: async (parent, args, {models, user}) => {
+    newNote: async (parent, args, { models, user }) => {
         if (!user) {
             throw new AuthenticationError('You are not logged in');
         }
 
-        return await models.Note.create({
+        const note = await models.Note.create({
             content: args.content,
             author: new mongoose.Types.ObjectId(user.id),
-        })
+        });
+
+        // Add the new note to the user's "notes" array
+        await models.User.findByIdAndUpdate(
+            user.id,
+            { $push: { notes: note._id } }, // Add the note ID to the `notes` array
+            { new: true }
+        );
+
+        return note;
     },
     deleteNote: async (parent, {id}, {models, user}) => {
         if (!user) {

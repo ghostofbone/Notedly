@@ -1,4 +1,5 @@
 const models = require("../models");
+const mongoose = require("mongoose");
 
 
 module.exports = {
@@ -17,31 +18,46 @@ module.exports = {
     me: async (parent, args, {models, user}) => {
         return await models.User.findById(user.id);
     },
-    noteFeed: async (parent, {cursor}, {models}) => {
-        const limit = 10;
+    noteFeed: async (parent, { cursor }, { models }) => {
+        const limit = 10; // Pagination limit
         let hasNextPage = false;
 
+        // Base query
         let cursorQuery = {};
-
+        if (cursor && !mongoose.Types.ObjectId.isValid(cursor)) {
+            throw new Error("Invalid cursor");
+        }
         if (cursor) {
             cursorQuery = { _id: { $lt: cursor } };
         }
 
-        let notes = await models.Note.find(cursorQuery)
-            .sort({ _id: -1 })
-            .limit(limit + 1);
+        try {
+            // Query notes and populate author
+            let notes = await models.Note.find(cursorQuery)
+                .populate("author") // Ensure author is populated
+                .sort({ _id: -1 })
+                .limit(limit + 1);
 
-        if (notes.length > limit) {
-            hasNextPage = true;
-            notes =  notes.slice(0, -1);
-        }
+            // Filter out notes with null authors or undefined entries
+            notes = notes.filter(note => note && note.author);
 
-        const newCursor = notes[notes.length - 1]._id;
+            // Handle pagination
+            if (notes.length > limit) {
+                hasNextPage = true;
+                notes = notes.slice(0, -1);
+            }
 
-        return {
-            notes,
-            cursor: newCursor,
-            hasNextPage
+            const newCursor = notes.length > 0 ? notes[notes.length - 1]._id : "";
+
+            return {
+                notes,
+                cursor: newCursor,
+                hasNextPage
+            };
+        } catch (error) {
+            console.error("Error in noteFeed resolver:", error);
+            throw new Error("Failed to fetch note feed");
         }
     }
+
 }
